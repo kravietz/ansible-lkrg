@@ -1,27 +1,31 @@
 ---
-- apt: name={{ item }}
+- name: build tools installed
+  apt: name={{ item }}
   loop: [make, libelf-dev, linux-headers-generic, build-essential]
 
-- git:
+- name: lkrg repo cloned
+  git:
     repo: "{{ lkrg_repo }}"
     dest: "{{ lkrg_build_dir }}"
   register: git
 
-- make:
+- name: lkrg built
+  make:
     chdir: "{{ lkrg_build_dir }}"
     target: "{{ item }}"
   loop: [clean,all]
   when: git.changed
   register: build
 
-- make:
+- name: lkrg installed
+  make:
     chdir: "{{ lkrg_build_dir }}"
     target: "{{ item }}"
   # install script errors when service is already there thus uninstall
   loop: [uninstall,install]
   when: build.changed
 
-- name: lkrg service
+- name: lkrg service set up
   service:
     name: lkrg
     state: started
