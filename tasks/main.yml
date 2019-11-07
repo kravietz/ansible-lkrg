@@ -7,9 +7,10 @@
   git:
     repo: "{{ lkrg_repo }}"
     dest: "{{ lkrg_build_dir }}"
+    version: HEAD
   register: git
 
-- name: lkrg built
+- name: lkrg built # noqa 503
   make:
     chdir: "{{ lkrg_build_dir }}"
     target: "{{ item }}"
@@ -17,7 +18,7 @@
   when: git.changed
   register: build
 
-- name: lkrg installed
+- name: lkrg installed # noqa 503
   make:
     chdir: "{{ lkrg_build_dir }}"
     target: "{{ item }}"
